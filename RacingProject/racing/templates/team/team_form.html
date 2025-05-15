@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add/Edit Team</title>
+</head>
+<body>
+    <h1>{% if form.instance.pk %}Edit Team{% else %}Add New Team{% endif %}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+
+    <br><br>
+    <b><a href="{% url 'team_list' %}"> Back to Team List</a></b>
+</body>
+</html>

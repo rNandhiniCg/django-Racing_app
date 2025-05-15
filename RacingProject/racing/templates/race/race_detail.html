@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Race Details</title>
+</head>
+<body>
+    <h1>Race Details</h1>
+    <p><strong>RaceName: </strong>     {{  race.race_track_name  }}</p>
+    <p><strong>Track Location:</strong> {{  race.track_location }}</p>
+    <p><strong>Race Date:</strong> {{ race.race_date}}</p>
+    <p><strong>Registration Closure Date:</strong> {{ race.registration_closure_date }}</p>
+    
+    <h3><u>Registered Drivers:</u></h3>
+    <ol>
+        {% for driver in race.registered_drivers.all %}
+            <li>{{ driver.first_name }} {{ driver.last_name }} -  Team {{ driver.team}}</li>
+        {% empty %}
+            <p>No Drivers registered</p>
+        {% endfor %}
+    </ol>
+
+    <p><a href="{% url 'register_driver_to_race' %}">Edit Drivers Registered </a></p>
+
+
+    <br><a href="{% url 'race_list' %}">Go to Race List </a> 
+</body>
+</html>

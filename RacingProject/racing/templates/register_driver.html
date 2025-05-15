@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register/Edit to race</title>
+</head>
+<body>
+    <h2>{{ title}} </h2>
+ 
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p}}
+
+ 
+        <button type="submit">Submit</button>
+    </form>
+ 
+    <a href="{% url 'driver_list' %}">Driver List</a> 
+    <a href="{% url 'race_list' %}">Race List</a> 
+</body>
+</html>

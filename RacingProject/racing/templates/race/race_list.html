@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Race List</title>
+    <style>
+        table {
+            width: 90%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .messages { margin-bottom: 1rem; }
+        .messages li { padding: 8px; border-radius: 5px; list-style: none; margin: 5px 0; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <center><h1>Races</h1></center>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <table>
+        {% if not races %}
+        <h3>No Races Available !</h3>
+        {% else %}
+        <thead>
+            <tr>
+              
+                <th>RaceName</th>
+                <th>Track Location</th>
+                <th>Race Date</th>
+                <th>Registration Closure Date</th>
+                <th>Registered Drivers</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for race in races %}
+            <tr>
+                
+                <td>{{ race.race_track_name }}</td>
+                <td>{{ race.track_location }}</td>
+                <td>{{ race.race_date }}</td>
+                <td>{{ race.registration_closure_date }}</td>
+                <td>
+                    <ol>
+                        {% for driver in race.registered_drivers.all %}
+                            <li>{{ driver.first_name }} {{ driver.last_name }} </li>
+                        {% empty %}
+                            <p>No Drivers registered</p>
+                        {% endfor %}
+                    </ol>
+                </td>
+           
+                <td>
+                    <a href="{% url 'edit_race_drivers' race.id %}">Add/Edit Reg. Drivers</a> | &nbsp;
+                    <a href="{% url 'race_edit' race.pk %}">Update </a>  | 
+                    <a href="{% url 'race_delete' race.pk %}">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+    <br>
+
+   <b> <a href="{% url 'race_create' %}">Add New Race</a></b> | &nbsp;
+    
+
+    
+
+    <br><br>
+    <b><a href="{% url 'home' %}"> Back to HomePage</a></b>
+</body>
+</html>

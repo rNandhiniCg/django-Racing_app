@@ -1,0 +1,15 @@
+# Python
+\__pycache__
+\.pytest_cache
+
+#Virtual environments 
+#.venv/
+
+# Django stuff
+
+db.sqlite3
+#media/
+RacingProject/settings.py
+
+# Pytest
+#.pytest_cache

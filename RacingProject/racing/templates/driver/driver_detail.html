@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Driver Details</h2>
+    <p><strong>Name: </strong>  {{ driver.first_name}} {{ driver.last_name}}</p>
+    <p><strong>Team: </strong> {{   driver.team.name }}</p>
+
+    <h3>Registered Races:</h3>
+    <ol>
+        {% for race in driver.registered_races.all %}
+            <li>{{ race.race_track_name }}  on {{ race.race_date }}</li>
+        {% empty %} 
+            <li>No Registered races</li>
+        {% endfor %}
+    </ol>
+ 
+    <h3>Upcoming Races:</h3>
+    <ol>
+    {% for race in upcoming_races %}
+        <li>{{ race.race_track_name }} on {{ race.race_date }}</li>
+    {% empty %} 
+        <li>No Upcoming races</li>
+    {% endfor %}
+    </ol>
+
+    <br>
+    <p><a href="{% url 'register_driver_to_race' %}">Register for a race ? </a></p>
+
+    <br><a href="{% url 'driver_list' %}">Back to Drivers List</a>
+</body>
+</html>

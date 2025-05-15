@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Driver List</title>
+    <style>
+        table {
+            width: 80%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 3px;
+            border: 0.5px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .messages { margin-bottom: 1rem; }
+        .messages li { padding: 10px; border-radius: 5px; list-style: none; margin: 5px 0; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <center><h1>Drivers</h1></center>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <table>
+        {% if not drivers %}
+        <h3>No Drivers Available !</h3>
+        {% else %}
+        <thead>           
+            <tr>
+               
+                <th>Name</th>
+                <th>Date of Birth</th>
+                <th>Team</th>
+                <th>Registered Races</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for driver in drivers %}
+            <tr>
+                
+                <td>{{ driver.first_name }} {{ driver.last_name }}</td>
+                <td>{{ driver.dob|date:"d-m-Y"}}</td>       
+                <td>{{ driver.team }}</td>
+                <td>
+                    <ol>
+                        {% for race in driver.registered_races.all %}
+                            <li>{{ race.race_track_name }}  on {{ race.race_date }}</li>
+                        {% empty %} 
+                            <i>No Registered races</i>
+                        {% endfor %}
+                    </ol>
+                </td>
+                <td>
+                    
+                    &nbsp;<a href="{% url 'register_driver_to_race' driver.id %}">Register/Edit race </a> | &nbsp;
+                    <b><a href="{% url 'driver_edit' driver.pk %}">Update</a> | &nbsp;
+                    <a href="{% url 'driver_delete' driver.pk %}">Delete</a></b>
+                </td>
+            </tr>
+            {% endfor %}
+           
+               
+        {% endif %}
+        </tbody>
+    </table>
+
+    <br>
+    <b><a href="{% url 'driver_create' %}">Add New Driver</a></b>   | &nbsp;
+        
+
+    <br><br><b><a href="{% url 'home' %}">Back to HomePage</a></b>
+</body>
+</html>

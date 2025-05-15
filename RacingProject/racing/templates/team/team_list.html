@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Team</title>
+    <style>
+        table {
+            width: 80%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+    <style>
+        .messages { margin-bottom: 1rem; }
+        .messages li { padding: 10px; border-radius: 5px; list-style: none; margin: 5px 0; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+    
+</head>
+<body>
+    <center><h1>Teams</h1></center>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <table>
+        {% if not teams %}
+        <h3>No Teams Available !</h3>
+        {% else %}
+        <thead>
+            
+            <tr>
+                
+                <th>Team Name</th>
+                <th>Team Location</th>
+                <th>Team Logo</th>
+                <th>About</th>
+                <th>Team Members</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in teams %}
+            <tr>
+                <td>{{ team.name }}</td>
+                <td>{{ team.location }}</td>
+                <td><img src="{{ team.logo.url }}" alt="{{ team.pk }}" width="40" ></td>
+                <td>{{ team.description|truncatewords:3}}</td>
+                <td>
+                
+                    <ol>
+                        {% for driver in team.drivers.all %}
+                            <li>{{ driver.first_name }} {{ driver.last_name }}</li>
+                        {% empty %}
+                            <p><i>No drivers</i></p>
+                        {% endfor %}
+                    </ol>
+                    
+
+                </td>
+                <td>
+                    <b><a href="{% url 'team_edit' team.pk %}">Update </a>  | 
+                    <a href="{% url 'team_delete' team.pk %}" >Delete</a>
+                    </b>
+                </td>
+            </tr>
+            
+            {% endfor %}
+        
+        {% endif %}
+        </tbody>
+    </table>
+    <br><br>
+    <b><a href="{% url 'team_create' %}"> Add New Team </a></b>
+
+    <br><br>
+    <b><a href="{% url 'home' %}"> Back to HomePage</a></b>
+</body>
+</html>
+
+
+
+
+
