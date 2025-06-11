@@ -33,6 +33,11 @@ class DriverSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'team': 'Team with this name does not exist.'})
         driver = Driver.objects.create(team=team, **validated_data)
         return driver
+    
+    def validate_team(self, value):
+        if not Team.objects.filter(name=value).exists():
+            raise serializers.ValidationError("Team with this name does not exist.")
+        return value
 
     
     def update(self, instance, validated_data):
