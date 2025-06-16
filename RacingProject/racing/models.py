@@ -17,17 +17,19 @@ def validate_dob(value):
 def validate_future_date(value):
     if value <= timezone.now().date():
         raise ValidationError("Race date must be in the future.")
- 
-def validate_past_date(value):
-    if value and value >= timezone.now().date():
-        raise ValidationError("Registration closure date must be in the past.")
-
         
 class Team(models.Model):
     name = models.CharField(max_length=256, unique=True )
     location = models.CharField(max_length=256)
     logo = models.ImageField(upload_to='logos/',validators=[validate_image_size],null=False,blank=False)
     description = models.TextField(max_length=1024, null=True, blank=True)
+
+    def delete(self, *args, **kwargs):
+        for driver in self.drivers.all():
+            if driver.registered_races.exists():
+                raise ValidationError("Cannot delete team with drivers registered to races.")
+        super().delete(*args, **kwargs)
+
 
     def __str__(self):
         return self.name
@@ -38,6 +40,12 @@ class Driver(models.Model):
     last_name = models.CharField(max_length=96, null=False)
     dob = models.DateField(validators=[validate_dob])
     team = models.ForeignKey(Team,  null=True, blank=True, on_delete= models.CASCADE, related_name='drivers')
+
+    def delete(self, *args, **kwargs):
+        if self.registered_races.exists():
+            raise ValidationError("Cannot delete driver registered to a race.")
+        super().delete(*args, **kwargs)
+
     
     def clean(self):
         if Driver.objects.exclude(pk=self.pk).filter(first_name= self.first_name, last_name=self.last_name, dob= self.dob).exists():
@@ -53,7 +61,7 @@ class Race(models.Model):
     race_date = models.DateField(validators=[validate_future_date]) 
     registration_closure_date = models.DateField(blank=True, null=True)
     registered_drivers = models.ManyToManyField(Driver, related_name='registered_races', blank=True, null=True)
-
+#null=True is not valid for ManyToManyField. Only blank=True is needed.
  
     def __str__(self):
         return self.race_track_name
@@ -63,6 +71,10 @@ class Race(models.Model):
             if self.registration_closure_date >= self.race_date:
                 raise ValidationError("Registration Closure date must be before the Race date !")
 
+    def delete(self, *args, **kwargs):
+        if self.registered_drivers.exists():
+            raise ValidationError("Cannot delete race with registered drivers.")
+        super().delete(*args, **kwargs)
 
 
 

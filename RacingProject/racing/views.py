@@ -90,7 +90,7 @@ def team_delete(request, pk):
 def driver_list(request):
     drivers = Driver.objects.all()
     return render(request, 'driver/driver_list.html', {'drivers': drivers})  
-
+'''
 #Driver view (upcoming + Registered races)
 def driver_detail(request, driver_id):
     driver = Driver.objects.get(id=driver_id)
@@ -99,7 +99,7 @@ def driver_detail(request, driver_id):
         'driver': driver,
         'upcoming_races': upcoming_races,
     })
-
+'''
 def driver_create(request):
     form = DriverForm(request.POST or None)
     if form.is_valid():
@@ -148,10 +148,12 @@ def race_list(request):
     races = Race.objects.all()
     return render(request, 'race/race_list.html', {'races': races})
 
+'''
 #Race view (with Registered Drivers)
 def race_detail(request, race_id):
     race = Race.objects.get(id=race_id)
     return render(request, 'race/race_detail.html', {'race': race})
+'''
 
 def race_create(request):
     form = RaceForm(request.POST or None)
@@ -307,22 +309,18 @@ class DriverDeleteViewAPI(generics.DestroyAPIView):
 class RaceListView(generics.ListAPIView):
     queryset = Race.objects.all()
     serializer_class = RaceSerializer
- 
- 
+
 class RaceCreateView(generics.CreateAPIView):
     queryset = Race.objects.all()
     serializer_class = RaceSerializer
- 
- 
+
 class RaceRetrieveView(generics.RetrieveAPIView):
     queryset = Race.objects.all()
     serializer_class = RaceSerializer
- 
- 
+  
 class RaceUpdateView(generics.UpdateAPIView):
     queryset = Race.objects.all()
     serializer_class = RaceSerializer
- 
  
 class RaceDeleteViewAPI(generics.DestroyAPIView):
     queryset = Race.objects.all()
@@ -339,7 +337,7 @@ class RaceDeleteViewAPI(generics.DestroyAPIView):
 class AddDriversToRaceAPIView(APIView):
     def post(self, request, race_id):
         race = get_object_or_404(Race, id=race_id)
-        serializer = AddDriversToRaceSerializer2(data=request.data, context= {'race':race})
+        serializer = AddDriversToRaceSerializer1(data=request.data, context= {'race':race})
         if serializer.is_valid():
             drivers = serializer.validated_data['drivers']
             race.registered_drivers.add(*drivers)
